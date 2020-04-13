@@ -125,7 +125,9 @@ void stream_close_handle(Stream *stream)
            (void *)stream,
            uv_stream_get_write_queue_size(stream->uvstream));
     }
-    uv_close((uv_handle_t *)stream->uvstream, close_cb);
+    if (!uv_is_closing(stream->uvstream)) {
+      uv_close((uv_handle_t *)stream->uvstream, close_cb);
+    }
   } else {
     uv_close((uv_handle_t *)&stream->uv.idle, close_cb);
   }
